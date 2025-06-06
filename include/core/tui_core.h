@@ -19,6 +19,10 @@ void tui_core_run(tui_render_fn render);
 // Clean up TUI systems
 void tui_core_shutdown(void);
 
+
+// Set the key to trigger exit (default: 'q')
+void tui_core_set_exit_key(int key);
+
 #ifdef __cplusplus
 }
 #endif
