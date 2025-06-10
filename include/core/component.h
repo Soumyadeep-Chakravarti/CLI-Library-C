@@ -3,6 +3,8 @@
 #ifndef TUI_COMPONENT_H
 #define TUI_COMPONENT_H
 
+#include "render/screen.h"
+
 #include <stddef.h>
 
 typedef struct TUIComponent TUIComponent;
@@ -13,10 +15,17 @@ typedef void (*tui_component_update_fn)(TUIComponent *);
 struct TUIComponent {
     int x, y;
     size_t width, height;
-    void *state;
+    Cell *state;
     tui_component_render_fn render;
     tui_component_update_fn update;
 };
+
+typedef struct{
+    int start_x;
+    int start_y;
+    size_t len;
+    void *state;
+} Screen;
 
 typedef struct {
     int x, y;

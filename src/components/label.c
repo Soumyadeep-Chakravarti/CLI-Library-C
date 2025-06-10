@@ -11,14 +11,21 @@ typedef struct {
     uint8_t bg;
 } LabelState;
 
-static void label_render(TUIComponent *self) {
+
+
+
+static void label_render(TUIComponent *self, Screen *screen) {
     LabelState *label = (LabelState *)self->state;
     size_t len = strlen(label->text);
-    int start_x = self->x;
-    int start_y = self->y;
+    
+    screen->start_x = self->x;
+    screen->start_y = self->y;
+    screen->state = label;
 
     for (size_t i = 0; i < len && i < self->width; ++i) {
-        screen_draw(start_x + (int)i, start_y, label->text[i], label->fg, label->bg);
+        screen->start_x += (int)i;
+        screen->(Cell)state->text[i];    
+        screen_draw(screen);
     }
 }
 

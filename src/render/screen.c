@@ -1,6 +1,8 @@
 // ~/src/render/screen.c
 
 #include "render/screen.h"
+#include "core/component.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -53,10 +55,10 @@ void screen_shutdown(void) {
 void screen_clear(void) {
     memset(buffer, 0, term_width * term_height * sizeof(Cell));
 }
-
-void screen_draw(int x, int y, char ch, uint8_t fg, uint8_t bg) {
-    if (x < 0 || y < 0 || x >= (int)term_width || y >= (int)term_height) return;
-    buffer[y * term_width + x] = (Cell){ ch, fg, bg };
+// void screen_draw(int x, int y, char ch, uint8_t fg, uint8_t bg) {
+void screen_draw(Screen *self) {
+    if (self->start_x < 0 || self->start_y < 0 || self->start_x >= (int)term_width || self->start_y >= (int)term_height) return;
+    buffer[self->start_y * term_width + self->start_x] = (Cell){ ch, fg, bg };
 }
 
 void screen_flush(void) {
