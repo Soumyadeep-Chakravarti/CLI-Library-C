@@ -20,7 +20,10 @@ int main() {
     Actor* label_actor = cast_label_actor(12, 1, 60);
     add_child(root_container, label_actor);
 
-    Actor* info_actor = cast_text_actor("Press 'q' to quit, backspace to delete.", 1, 3);
+    Actor* styled_actor = cast_styled_text_actor("This is styled text.", 1, 3, "fg-blue bg-white bold");
+    add_child(root_container, styled_actor);
+    
+    Actor* info_actor = cast_text_actor("Press 'q' to quit, backspace to delete.", 1, 5);
     add_child(root_container, info_actor);
 
     conductor_run_show(conductor);

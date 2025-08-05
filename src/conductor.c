@@ -4,30 +4,6 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 
-void enable_raw_mode(Conductor* conductor) {
-    if (tcgetattr(STDIN_FILENO, &conductor->original_termios) == -1) {
-        perror("tcgetattr");
-        exit(1);
-    }
-
-    struct termios raw = conductor->original_termios;
-    raw.c_lflag &= ~(ECHO | ICANON);
-    raw.c_cc[VMIN] = 0;
-    raw.c_cc[VTIME] = 1;
-    
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
-        perror("tcsetattr");
-        exit(1);
-    }
-}
-
-void disable_raw_mode(Conductor* conductor) {
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &conductor->original_termios) == -1) {
-        perror("tcsetattr");
-        exit(1);
-    }
-}
-
 Conductor* create_conductor(int width, int height) {
     Conductor* conductor = (Conductor*)malloc(sizeof(Conductor));
     if (conductor == NULL) return NULL;

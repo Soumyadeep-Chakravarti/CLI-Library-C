@@ -10,6 +10,13 @@ void text_call_sheet_destructor(void* call_sheet_data, void* inner_monologue_dat
     delete cs;
 }
 
+// C-style destructor for the styled text actor
+void styled_text_call_sheet_destructor(void* call_sheet_data, void* inner_monologue_data) {
+    StyledTextCallSheet* cs = static_cast<StyledTextCallSheet*>(call_sheet_data);
+    free((void*)cs->script_line);
+    delete cs;
+}
+
 // C-style destructor for the blinking actor
 void blinking_actor_destructor(void* call_sheet_data, void* inner_monologue_data) {
     text_call_sheet_destructor(call_sheet_data, nullptr);
@@ -59,6 +66,27 @@ Actor* cast_text_actor(const char* script_line, int x, int y) {
 
     return actor;
 }
+
+// C-style wrapper for casting a styled text actor
+Actor* cast_styled_text_actor(const char* script_line, int x, int y, const char* style_string) {
+    StyledTextCallSheet* call_sheet = new StyledTextCallSheet;
+    call_sheet->script_line = strdup(script_line);
+    call_sheet->x = x;
+    call_sheet->y = y;
+    call_sheet->style = parse_style_string(style_string); // Parse the string ONCE
+
+    Actor* actor = new Actor;
+    actor->call_sheet_data = static_cast<const void*>(call_sheet);
+    actor->inner_monologue_data = nullptr;
+    actor->perform_func = reinterpret_cast<PerformanceFunc>(styled_text_performance);
+    actor->destructor_func = styled_text_call_sheet_destructor;
+    actor->children = nullptr;
+    actor->child_count = 0;
+    actor->child_capacity = 0;
+
+    return actor;
+}
+
 
 // C-style wrapper for casting a blinking actor
 Actor* cast_blinking_actor(const char* script_line, int x, int y) {
@@ -134,3 +162,4 @@ void destroy_actor(Actor* actor) {
     // appropriate way to clean up any actor.
     destroy_actor_tree(actor);
 }
+
